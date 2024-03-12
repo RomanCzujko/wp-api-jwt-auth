@@ -156,8 +156,16 @@ class Jwt_Auth_Public {
 		$notBefore = apply_filters( 'jwt_auth_not_before', $issuedAt, $issuedAt );
 		$expire    = apply_filters( 'jwt_auth_expire', $issuedAt + ( DAY_IN_SECONDS * 7 ), $issuedAt );
 
+		$url = get_bloginfo('url');
+		$parsedUrl = parse_url($url);
+		$domain = $parsedUrl['host'];
+		$scheme = $parsedUrl['scheme']; // This will be either 'http' or 'https'
+
+		// Construct the $issValue to include the scheme and domain
+		$issValue = $scheme . '://' . $domain;
+
 		$token = [
-			'iss'  => get_bloginfo( 'url' ),
+			'iss'  => $issValue,
 			'iat'  => $issuedAt,
 			'nbf'  => $notBefore,
 			'exp'  => $expire,
@@ -359,17 +367,28 @@ class Jwt_Auth_Public {
 
 			$token = JWT::decode( $token, new Key( $secret_key, $algorithm ) );
 
-			/** The Token is decoded now validate the iss */
-			if ( $token->iss !== get_bloginfo( 'url' ) ) {
-				/** The iss do not match, return error */
+			// Parse the URL from the blog information
+			$url = get_bloginfo('url');
+			$parsedUrl = parse_url($url);
+			$domain = $parsedUrl['host'];
+			$scheme = $parsedUrl['scheme']; // This will be either 'http' or 'https'
+
+			// Construct the expected ISS value to include the scheme and domain
+			$expectedIss = $scheme . '://' . $domain;
+
+			// Now, compare the token's ISS value with the expected ISS value
+			if ($token->iss !== $expectedIss) {
+				/** The iss does not match, return error */
 				return new WP_Error(
 					'jwt_auth_bad_iss',
-					'The iss do not match with this server',
+					'The iss does not match with this server',
 					[
 						'status' => 403,
 					]
 				);
 			}
+
+
 
 			/** So far so good, validate the user id in the token */
 			if ( ! isset( $token->data->user->id ) ) {
