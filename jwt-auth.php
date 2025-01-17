@@ -8,16 +8,16 @@
  * registers the activation and deactivation functions, and defines a function
  * that starts the plugin.
  *
- * @link              https://enriquechavez.co
+ * @link              https://github.com/RomanCzujko/wp-api-jwt-auth
  * @since             1.0.0
  *
  * @wordpress-plugin
- * Plugin Name:       JWT Authentication for WP-API
- * Plugin URI:        https://enriquechavez.co
+ * Plugin Name:       JWT Authentication for WP-API (edited Marcin)
+ * Plugin URI:        https://github.com/RomanCzujko/wp-api-jwt-auth
  * Description:       Extends the WP REST API using JSON Web Tokens Authentication as an authentication method.
  * Version:           1.3.4
  * Author:            Enrique Chavez
- * Author URI:        https://enriquechavez.co
+ * Author URI:        https://github.com/RomanCzujko/wp-api-jwt-auth
  * License:           GPL-2.0+
  * License URI:       http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain:       jwt-auth
